@@ -1,0 +1,46 @@
+service: serverless-framework-rds-proxy-example
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs12.x
+  memorySize: 256
+  vpc:
+    securityGroupIds:
+      - !Ref LambdaSecurityGroup
+    subnetIds:
+      - !Ref SubnetA
+      - !Ref SubnetB
+  environment:
+    NODE_ENV: ${opt:stage, 'dev'}
+    DB_NAME: ${self:custom.DB_NAME}
+    DB_USER: ${self:custom.DB_USERNAME}
+    DB_PASS: ${self:custom.DB_PASSWORD}
+    DB_PORT: ${self:custom.DB_PORT}
+    DB_HOST: ${self:custom.PROXY_ENDPOINT}
+
+custom:
+  DB_NAME: dbname
+  DB_USERNAME: dbusername
+  DB_PASSWORD: dbpassword
+  DB_PORT: !GetAtt RDSInstance.Endpoint.Port
+  PROXY_ENDPOINT: !GetAtt RDSProxy.Endpoint
+  PROXY_NAME: example-proxy-name-${opt:stage, 'dev'}
+  VPC_CIDR: 10
+
+functions:
+  proxyHealthCheck:
+    handler: lib/handlers/proxyHealthCheck.handler
+    events:
+      - http:
+          path: proxy-healthcheck
+          method: get
+
+plugins:
+  - serverless-pseudo-parameters
+
+resources:
+  - ${file(resources/VpcResources.yml)}
+  - ${file(resources/RoutingResources.yml)}
+  - ${file(resources/RdsResources.yml)}
+  - ${file(resources/RdsProxyResources.yml)}

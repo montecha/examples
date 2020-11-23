@@ -22,6 +22,17 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt EIP.AllocationId
+      SubnetId: !Ref SubnetA
+
   SubnetA:
     Type: AWS::EC2::Subnet
     Properties:
@@ -41,6 +52,26 @@ Resources:
       Tags:
         - Key: "Name"
           Value: "SubnetB"
+
+  SubnetAPrivate:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ${self:provider.region}a
+      CidrBlock: ${self:custom.VPC_CIDR}.0.2.0/24
+      Tags:
+        - Key: "Name"
+          Value: "SubnetAPrivate"
+
+  SubnetBPrivate:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ${self:provider.region}b
+      CidrBlock: ${self:custom.VPC_CIDR}.0.3.0/24
+      Tags:
+        - Key: "Name"
+          Value: "SubnetBPrivate"
 
   LambdaSecurityGroup:
     Type: AWS::EC2::SecurityGroup

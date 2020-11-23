@@ -9,8 +9,8 @@ provider:
     securityGroupIds:
       - !Ref LambdaSecurityGroup
     subnetIds:
-      - !Ref SubnetA
-      - !Ref SubnetB
+      - !Ref SubnetAPrivate
+      - !Ref SubnetBPrivate
   environment:
     NODE_ENV: ${opt:stage, 'dev'}
     DB_NAME: ${self:custom.DB_NAME}

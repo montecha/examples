@@ -15,6 +15,21 @@ Resources:
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref RouteTablePublic
 
+  RouteTablePrivate:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: "Name"
+          Value: "RouteTablePrivate"
+
+  RoutePrivate:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway
+      RouteTableId: !Ref RouteTablePrivate
+
   RouteTableAssociationSubnetA:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -26,3 +41,15 @@ Resources:
     Properties:
       RouteTableId: !Ref RouteTablePublic
       SubnetId: !Ref SubnetB
+
+  RouteTableAssociationSubnetAPrivate:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTablePrivate
+      SubnetId: !Ref SubnetAPrivate
+
+  RouteTableAssociationSubnetBPrivate:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTablePrivate
+      SubnetId: !Ref SubnetBPrivate

@@ -36,6 +36,13 @@ functions:
           path: proxy-healthcheck
           method: get
 
+  testInternetAccess:
+    handler: lib/handlers/testInternetAccess.handler
+    events:
+      - http:
+          path: test-internet-access
+          method: get
+
 plugins:
   - serverless-pseudo-parameters
 

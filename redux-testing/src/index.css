@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+  @apply bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-3 rounded-full shadow;
+}
+
+.todo-list-item {
+  @apply flex m-2 p-2 rounded-xl bg-white content-center items-center;
+}
+
+.item-text {
+  @apply cursor-pointer select-none;
+}
+
+.done {
+  @apply line-through;
+}
+
+.input {
+  @apply rounded-xl w-4/6 h-10 m-2 p-2;
+}
